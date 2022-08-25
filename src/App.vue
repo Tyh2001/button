@@ -2,6 +2,8 @@
   import { ref, watch, computed } from 'vue'
   import { ChangeColor } from './utils/change-color'
   import { debounce } from './utils/utils'
+  import Clipboard from 'clipboard'
+  import { FMessage } from 'fighting-design'
 
   const width = ref(40)
   const height = ref(35)
@@ -30,6 +32,52 @@
       '--button-hover-color': lightColor.value,
       '--button-active-color': darkColor.value,
     }
+  })
+
+  const copyCode = (node: string): void => {
+    FMessage({
+      message: '复制成功',
+      type: 'success',
+      round: true,
+    })
+    return new Clipboard(node)
+  }
+  const htmlCode = computed(() => {
+    return `<button class="f-button">你好啊</button>`
+  })
+  const cssCode = computed(() => {
+    return `
+    .f-button {
+      height: ${height.value}px;
+      width: ${width.value}px;
+      color: ${color.value};
+      background: ${background.value};
+      font-size: ${fontSize.value}px;
+      border-radius: ${borderRadius.value}px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      border: none;
+      outline: none;
+      user-select: none;
+      text-decoration: none;
+      transition: 0.3s;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0 25px;
+      overflow: hidden;
+      white-space: nowrap;
+      vertical-align: middle;
+    }
+
+    .f-button:hover {
+      background: ${lightColor.value};
+    }
+
+    .f-button:active {
+      background: ${darkColor.value};
+    }
+    `
   })
 </script>
 
@@ -71,7 +119,7 @@
       </li>
       <li class="item">
         <span class="title">文字大小</span>
-        <input type="range" v-model="fontSize" :max="30" :min="12" />
+        <input type="range" v-model="fontSize" :max="50" :min="12" />
       </li>
       <li class="item">
         <span class="title">文字颜色</span>
@@ -80,8 +128,24 @@
     </ul>
 
     <div class="result">
-      <f-button round simple>复制 HTML</f-button>
-      <f-button round simple>复制 CSS</f-button>
+      <f-button
+        class="html"
+        round
+        simple
+        :data-clipboard-text="htmlCode"
+        @click="copyCode('.html')"
+      >
+        复制 HTML
+      </f-button>
+      <f-button
+        class="css"
+        round
+        simple
+        :data-clipboard-text="cssCode"
+        @click="copyCode('.css')"
+      >
+        复制 CSS
+      </f-button>
     </div>
   </div>
 </template>
