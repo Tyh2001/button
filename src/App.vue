@@ -13,6 +13,8 @@
   const lightColor = ref('')
   const borderRadius = ref(2)
   const fontSize = ref(14)
+  // const text = ref('Button')
+  const buttonText = ref()
 
   watch(
     () => background.value,
@@ -43,7 +45,7 @@
     return new Clipboard(node)
   }
   const htmlCode = computed(() => {
-    return `<button class="f-button">你好啊</button>`
+    return `<button class="f-button">Button</button>`
   })
   const cssCode = computed(() => {
     return `
@@ -96,7 +98,9 @@
           ...colorList,
         }"
       >
-        <p class="button-text" contenteditable="true">123</p>
+        <p ref="buttonText" class="button-text" contenteditable="true">
+          Button
+        </p>
       </div>
     </div>
 
