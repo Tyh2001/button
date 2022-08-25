@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "fighting-design": "0.6.2-alpha.2",
     "sass": "^1.54.5",
     "vue": "^3.2.37"
   },
