@@ -13,15 +13,18 @@
   const lightColor = ref('')
   const borderRadius = ref(2)
   const fontSize = ref(14)
-  // const text = ref('Button')
-  const buttonText = ref()
+  const text = ref('Button')
+  const borderColor = ref('#000000')
+  const borderSize = ref(1)
+  const darkSleep = ref(0.3)
+  const lightSleep = ref(0.3)
 
   watch(
     () => background.value,
     debounce(() => {
       const changeColor: ChangeColor = new ChangeColor(background.value)
-      const dark: string = changeColor.getDarkColor(0.3)
-      const light: string = changeColor.getLightColor(0.3)
+      const dark: string = changeColor.getDarkColor(darkSleep.value)
+      const light: string = changeColor.getLightColor(lightSleep.value)
 
       darkColor.value = dark
       lightColor.value = light
@@ -36,7 +39,7 @@
     }
   })
 
-  const copyCode = (node: string): void => {
+  const copyCode = (node: string): ClipboardJS => {
     FMessage({
       message: '复制成功',
       type: 'success',
@@ -44,10 +47,12 @@
     })
     return new Clipboard(node)
   }
-  const htmlCode = computed(() => {
-    return `<button class="f-button">Button</button>`
+
+  const htmlCode = computed((): string => {
+    return `<button class="f-button">${text.value}</button>`
   })
-  const cssCode = computed(() => {
+
+  const cssCode = computed((): string => {
     return `
     .f-button {
       height: ${height.value}px;
@@ -95,19 +100,30 @@
           fontSize: fontSize + 'px',
           background,
           color,
+          border: `${borderSize}px solid ${borderColor}`,
           ...colorList,
         }"
       >
-        <p ref="buttonText" class="button-text" contenteditable="true">
-          Button
-        </p>
+        <p class="button-text">{{ text }}</p>
       </div>
     </div>
 
     <ul class="option">
       <li class="item">
+        <span class="title">内容</span>
+        <input type="text" v-model="text" />
+      </li>
+      <li class="item">
         <span class="title">背景色</span>
         <input type="color" v-model="background" />
+      </li>
+      <li class="item">
+        <span class="title">边框色</span>
+        <input type="color" v-model="borderColor" />
+      </li>
+      <li class="item">
+        <span class="title">边框尺寸</span>
+        <input type="range" v-model="borderSize" :max="30" />
       </li>
       <li class="item">
         <span class="title">宽度</span>
@@ -128,6 +144,25 @@
       <li class="item">
         <span class="title">文字颜色</span>
         <input type="color" v-model="color" />
+      </li>
+      <li class="item">
+        <span class="title">hover 减淡深度</span>
+        <select v-model="lightSleep">
+          <option :value="0.1">0.1</option>
+          <option :value="0.2">0.2</option>
+          <option :value="0.3">0.3</option>
+          <option :value="0.4">0.4</option>
+        </select>
+      </li>
+
+      <li class="item">
+        <span class="title">active 加深深度</span>
+        <select v-model="darkSleep">
+          <option :value="0.1">0.1</option>
+          <option :value="0.2">0.2</option>
+          <option :value="0.3">0.3</option>
+          <option :value="0.4">0.4</option>
+        </select>
       </li>
     </ul>
 
