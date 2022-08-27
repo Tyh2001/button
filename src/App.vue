@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-  import { ref, watch, computed } from 'vue'
+  import { ref, computed, watchEffect } from 'vue'
   import { ChangeColor } from './utils/change-color'
-  import { debounce } from './utils/utils'
   import Clipboard from 'clipboard'
   import { FMessage } from 'fighting-design'
 
@@ -15,22 +14,18 @@
   const fontSize = ref(14)
   const text = ref('Button')
   const borderColor = ref('#000000')
-  const borderSize = ref(1)
+  const borderSize = ref(0)
   const darkSleep = ref(0.3)
   const lightSleep = ref(0.3)
 
-  watch(
-    () => background.value,
-    debounce(() => {
-      const changeColor: ChangeColor = new ChangeColor(background.value)
-      const dark: string = changeColor.getDarkColor(darkSleep.value)
-      const light: string = changeColor.getLightColor(lightSleep.value)
+  watchEffect(() => {
+    const changeColor: ChangeColor = new ChangeColor(background.value)
+    const dark: string = changeColor.getDarkColor(darkSleep.value)
+    const light: string = changeColor.getLightColor(lightSleep.value)
 
-      darkColor.value = dark
-      lightColor.value = light
-    }),
-    { immediate: true }
-  )
+    darkColor.value = dark
+    lightColor.value = light
+  })
 
   const colorList = computed(() => {
     return {
@@ -75,6 +70,11 @@
       overflow: hidden;
       white-space: nowrap;
       vertical-align: middle;
+      ${
+        borderSize.value > 0
+          ? `border: ${borderSize.value}px solid ${borderColor.value};`
+          : ''
+      }
     }
 
     .f-button:hover {
@@ -131,7 +131,7 @@
       </li>
       <li class="item">
         <span class="title">高度</span>
-        <input type="range" v-model="height" :max="100" />
+        <input type="range" v-model="height" :max="180" />
       </li>
       <li class="item">
         <span class="title">圆角</span>
@@ -152,6 +152,7 @@
           <option :value="0.2">0.2</option>
           <option :value="0.3">0.3</option>
           <option :value="0.4">0.4</option>
+          <option :value="0.5">0.5</option>
         </select>
       </li>
 
@@ -162,6 +163,7 @@
           <option :value="0.2">0.2</option>
           <option :value="0.3">0.3</option>
           <option :value="0.4">0.4</option>
+          <option :value="0.5">0.5</option>
         </select>
       </li>
     </ul>
