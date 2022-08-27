@@ -1,36 +1,46 @@
 <script lang="ts" setup>
-  import { ref, computed, watchEffect } from 'vue'
+  import { computed, watchEffect, reactive } from 'vue'
   import { ChangeColor } from './utils/change-color'
   import Clipboard from 'clipboard'
   import { FMessage } from 'fighting-design'
+  import type { CSSProperties } from 'vue'
 
-  const width = ref(40)
-  const height = ref(35)
-  const background = ref('#2d5af1')
-  const color = ref('#ffffff')
-  const darkColor = ref('')
-  const lightColor = ref('')
-  const borderRadius = ref(2)
-  const fontSize = ref(14)
-  const text = ref('Button')
-  const borderColor = ref('#000000')
-  const borderSize = ref(0)
-  const darkSleep = ref(0.3)
-  const lightSleep = ref(0.3)
-
-  watchEffect(() => {
-    const changeColor: ChangeColor = new ChangeColor(background.value)
-    const dark: string = changeColor.getDarkColor(darkSleep.value)
-    const light: string = changeColor.getLightColor(lightSleep.value)
-
-    darkColor.value = dark
-    lightColor.value = light
+  const styleList = reactive({
+    width: 40,
+    height: 35,
+    background: '#2d5af1',
+    color: '#ffffff',
+    darkColor: '',
+    lightColor: '',
+    borderRadius: 2,
+    fontSize: 14,
+    text: 'Button',
+    borderColor: '#000000',
+    borderSize: 0,
+    darkSleep: 0.3,
+    lightSleep: 0.3,
   })
 
-  const colorList = computed(() => {
+  watchEffect(() => {
+    const changeColor: ChangeColor = new ChangeColor(styleList.background)
+    const dark: string = changeColor.getDarkColor(styleList.darkSleep)
+    const light: string = changeColor.getLightColor(styleList.lightSleep)
+
+    styleList.darkColor = dark
+    styleList.lightColor = light
+  })
+
+  const colorList = computed((): CSSProperties => {
     return {
-      '--button-hover-color': lightColor.value,
-      '--button-active-color': darkColor.value,
+      '--button-hover-color': styleList.lightColor,
+      '--button-active-color': styleList.darkColor,
+      width: styleList.width + 'px',
+      height: styleList.height + 'px',
+      borderRadius: styleList.borderRadius + 'px',
+      fontSize: styleList.fontSize + 'px',
+      background: styleList.background,
+      color: styleList.color,
+      border: `${styleList.borderSize}px solid ${styleList.borderColor}`,
     }
   })
 
@@ -44,18 +54,18 @@
   }
 
   const htmlCode = computed((): string => {
-    return `<button class="f-button">${text.value}</button>`
+    return `<button class="f-button">${styleList.text}</button>` as const
   })
 
   const cssCode = computed((): string => {
     return `
     .f-button {
-      height: ${height.value}px;
-      width: ${width.value}px;
-      color: ${color.value};
-      background: ${background.value};
-      font-size: ${fontSize.value}px;
-      border-radius: ${borderRadius.value}px;
+      height: ${styleList.height}px;
+      width: ${styleList.width}px;
+      color: ${styleList.color};
+      background: ${styleList.background};
+      font-size: ${styleList.fontSize}px;
+      border-radius: ${styleList.borderRadius}px;
       display: inline-flex;
       justify-content: center;
       align-items: center;
@@ -71,83 +81,71 @@
       white-space: nowrap;
       vertical-align: middle;
       ${
-        borderSize.value > 0
-          ? `border: ${borderSize.value}px solid ${borderColor.value};`
+        styleList.borderSize > 0
+          ? `border: ${styleList.borderSize}px solid ${styleList.borderColor};`
           : ''
       }
     }
 
     .f-button:hover {
-      background: ${lightColor.value};
+      background: ${styleList.lightColor};
     }
 
     .f-button:active {
-      background: ${darkColor.value};
+      background: ${styleList.darkColor};
     }
-    `
+    ` as const
   })
 </script>
 
 <template>
   <div id="box">
     <div class="button-box">
-      <div
-        class="button"
-        :style="{
-          width: width + 'px',
-          height: height + 'px',
-          borderRadius: borderRadius + 'px',
-          fontSize: fontSize + 'px',
-          background,
-          color,
-          border: `${borderSize}px solid ${borderColor}`,
-          ...colorList,
-        }"
-      >
-        <p class="button-text">{{ text }}</p>
+      <div class="button" :style="colorList">
+        <p class="button-text">{{ styleList.text }}</p>
       </div>
     </div>
 
     <ul class="option">
       <li class="item">
         <span class="title">内容</span>
-        <input type="text" v-model="text" />
+        <input type="text" v-model="styleList.text" />
       </li>
       <li class="item">
         <span class="title">背景色</span>
-        <input type="color" v-model="background" />
+        <input type="color" v-model="styleList.background" />
       </li>
       <li class="item">
         <span class="title">边框色</span>
-        <input type="color" v-model="borderColor" />
+        <input type="color" v-model="styleList.borderColor" />
       </li>
       <li class="item">
         <span class="title">边框尺寸</span>
-        <input type="range" v-model="borderSize" :max="30" />
+        <input type="range" v-model="styleList.borderSize" :max="30" />
       </li>
       <li class="item">
         <span class="title">宽度</span>
-        <input type="range" v-model="width" :max="1000" />
+        <input type="range" v-model="styleList.width" :max="1000" />
       </li>
       <li class="item">
         <span class="title">高度</span>
-        <input type="range" v-model="height" :max="180" />
+        <input type="range" v-model="styleList.height" :max="180" />
       </li>
       <li class="item">
         <span class="title">圆角</span>
-        <input type="range" v-model="borderRadius" :max="100" />
+        <input type="range" v-model="styleList.borderRadius" :max="100" />
       </li>
       <li class="item">
         <span class="title">文字大小</span>
-        <input type="range" v-model="fontSize" :max="50" :min="12" />
+        <input type="range" v-model="styleList.fontSize" :max="50" :min="12" />
       </li>
       <li class="item">
         <span class="title">文字颜色</span>
-        <input type="color" v-model="color" />
+        <input type="color" v-model="styleList.color" />
       </li>
       <li class="item">
         <span class="title">hover 减淡深度</span>
-        <select v-model="lightSleep">
+        <select v-model="styleList.lightSleep">
           <option :value="0.1">0.1</option>
           <option :value="0.2">0.2</option>
           <option :value="0.3">0.3</option>
@@ -158,7 +156,7 @@
 
       <li class="item">
         <span class="title">active 加深深度</span>
-        <select v-model="darkSleep">
+        <select v-model="styleList.darkSleep">
           <option :value="0.1">0.1</option>
           <option :value="0.2">0.2</option>
           <option :value="0.3">0.3</option>
