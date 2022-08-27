@@ -1,16 +1,17 @@
-# Vue 3 + TypeScript + Vite
+# Button
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## 🤟 介绍
 
-## Recommended IDE Setup
+🍭 打造你的个性化按钮样式，可自定义样式，复制代码。
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
+## ✨ 特性
 
-## Type Support For `.vue` Imports in TS
+- 自定义按钮样式
+- 自动计算 hover 和 active 效果
+- 一件复制代码
 
-Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates. However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can enable Volar's Take Over mode by following these steps:
+## 🙏 贡献者
 
-1. Run `Extensions: Show Built-in Extensions` from VS Code's command palette, look for `TypeScript and JavaScript Language Features`, then right click and select `Disable (Workspace)`. By default, Take Over mode will enable itself if the default TypeScript extension is disabled.
-2. Reload the VS Code window by running `Developer: Reload Window` from the command palette.
+该仓库由 [Tyh2001](https://github.com/Tyh2001) 提供。
 
-You can learn more about Take Over mode [here](https://github.com/johnsoncodehk/volar/discussions/471).
+![](https://tianyuhao.cn/images/auto/weixin.png)
