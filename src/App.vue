@@ -100,6 +100,16 @@
 
 <template>
   <div id="box">
+    <f-link
+      href="https://github.com/Tyh2001/Button"
+      target="_blank"
+      state="bag"
+      size="20px"
+      left-icon="f-icon-attachent"
+    >
+      Github
+    </f-link>
+
     <div class="button-box">
       <div class="button" :style="colorList">
         <p class="button-text">{{ styleList.text }}</p>
@@ -144,7 +154,7 @@
         <input type="color" v-model="styleList.color" />
       </li>
       <li class="item">
-        <span class="title">hover 减淡深度</span>
+        <span class="title">Hover 减淡深度</span>
         <select v-model="styleList.lightSleep">
           <option :value="0.1">0.1</option>
           <option :value="0.2">0.2</option>
@@ -155,7 +165,7 @@
       </li>
 
       <li class="item">
-        <span class="title">active 加深深度</span>
+        <span class="title">Active 加深深度</span>
         <select v-model="styleList.darkSleep">
           <option :value="0.1">0.1</option>
           <option :value="0.2">0.2</option>
@@ -164,6 +174,7 @@
           <option :value="0.5">0.5</option>
         </select>
       </li>
+      <li class="item"></li>
     </ul>
 
     <div class="result">
@@ -189,17 +200,26 @@
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style>
   * {
     margin: 0;
     padding: 0;
   }
+</style>
 
+<style lang="scss" scoped>
   #box {
-    width: 850px;
+    max-width: 850px;
     margin: 0 auto;
     padding: 30px;
     box-sizing: border-box;
+    position: relative;
+    .f-link {
+      position: absolute;
+      top: 30px;
+      right: 50px;
+    }
+
     .button-box {
       height: 200px;
       display: flex;
@@ -233,25 +253,48 @@
       }
     }
     .option {
-      width: 350px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      flex-wrap: wrap;
       margin: 0 auto;
 
       .item {
         list-style: none;
+        width: 300px;
         color: #a8abb2;
-        line-height: 40px;
+        line-height: 50px;
         display: flex;
         align-items: center;
 
         .title {
           display: inline-block;
           width: 190px;
+          user-select: none;
+        }
+
+        input,
+        select {
+          width: 150px;
+          padding: 0 7px;
+          height: 30px;
+          background: rgb(245, 245, 245);
+          outline: none;
+          border: 1px solid #dfe6fc;
+          cursor: pointer;
+          transition: 0.3s;
+
+          &:focus {
+            background: #fff;
+            border: 1px solid #2d5af1;
+          }
         }
       }
     }
     .result {
       width: 300px;
       margin: 0 auto;
+      margin-bottom: 60px;
       margin-top: 50px;
       display: flex;
       justify-content: space-around;
