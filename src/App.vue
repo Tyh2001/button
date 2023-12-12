@@ -6,7 +6,7 @@
   import type { CSSProperties } from 'vue'
 
   const styleList = reactive({
-    width: 40,
+    width: 110,
     height: 35,
     background: '#2d5af1',
     color: '#ffffff',
@@ -19,6 +19,7 @@
     borderSize: 0,
     darkSleep: 0.3,
     lightSleep: 0.3,
+    unit: 'px',
   })
 
   watchEffect(() => {
@@ -34,10 +35,10 @@
     return {
       '--button-hover-color': styleList.lightColor,
       '--button-active-color': styleList.darkColor,
-      width: styleList.width + 'px',
-      height: styleList.height + 'px',
-      borderRadius: styleList.borderRadius + 'px',
-      fontSize: styleList.fontSize + 'px',
+      width: styleList.width + styleList.unit,
+      height: styleList.height + styleList.unit,
+      borderRadius: styleList.borderRadius + styleList.unit,
+      fontSize: styleList.fontSize + styleList.unit,
       background: styleList.background,
       color: styleList.color,
       border: `${styleList.borderSize}px solid ${styleList.borderColor}`,
@@ -54,18 +55,18 @@
   }
 
   const htmlCode = computed((): string => {
-    return `<button class="f-button">${styleList.text}</button>` as const
+    return `<button class="demo-button">${styleList.text}</button>` as const
   })
 
   const cssCode = computed((): string => {
     return `
-    .f-button {
-      height: ${styleList.height}px;
-      width: ${styleList.width}px;
+    .demo-button {
+      height: ${styleList.height}${styleList.unit};
+      width: ${styleList.width}${styleList.unit};
       color: ${styleList.color};
       background: ${styleList.background};
-      font-size: ${styleList.fontSize}px;
-      border-radius: ${styleList.borderRadius}px;
+      font-size: ${styleList.fontSize}${styleList.unit};
+      border-radius: ${styleList.borderRadius}${styleList.unit};
       display: inline-flex;
       justify-content: center;
       align-items: center;
@@ -76,22 +77,22 @@
       transition: 0.3s;
       line-height: 1;
       cursor: pointer;
-      padding: 0 25px;
+      padding: 0 25${styleList.unit};
       overflow: hidden;
       white-space: nowrap;
       vertical-align: middle;
       ${
         styleList.borderSize > 0
-          ? `border: ${styleList.borderSize}px solid ${styleList.borderColor};`
+          ? `border: ${styleList.borderSize}${styleList.unit} solid ${styleList.borderColor};`
           : ''
       }
     }
 
-    .f-button:hover {
+    .demo-button:hover {
       background: ${styleList.lightColor};
     }
 
-    .f-button:active {
+    .demo-button:active {
       background: ${styleList.darkColor};
     }
     ` as const
@@ -103,79 +104,153 @@
     <f-link
       href="https://github.com/Tyh2001/Button"
       target="_blank"
-      state="bag"
       size="20px"
       left-icon="f-icon-attachent"
     >
       Github
     </f-link>
 
+    <!-- 演示盒子 -->
     <div class="button-box">
-      <div class="button" :style="colorList">
-        <p class="button-text">{{ styleList.text }}</p>
-      </div>
+      <button class="button" :style="colorList">{{ styleList.text }}</button>
     </div>
 
-    <ul class="option">
-      <li class="item">
-        <span class="title">内容</span>
-        <input type="text" v-model="styleList.text" />
-      </li>
-      <li class="item">
-        <span class="title">背景色</span>
-        <input type="color" v-model="styleList.background" />
-      </li>
-      <li class="item">
-        <span class="title">边框色</span>
-        <input type="color" v-model="styleList.borderColor" />
-      </li>
-      <li class="item">
-        <span class="title">边框尺寸</span>
-        <input type="range" v-model="styleList.borderSize" :max="30" />
-      </li>
-      <li class="item">
-        <span class="title">宽度</span>
-        <input type="range" v-model="styleList.width" :max="1000" />
-      </li>
-      <li class="item">
-        <span class="title">高度</span>
-        <input type="range" v-model="styleList.height" :max="180" />
-      </li>
-      <li class="item">
-        <span class="title">圆角</span>
-        <input type="range" v-model="styleList.borderRadius" :max="100" />
-      </li>
-      <li class="item">
-        <span class="title">文字大小</span>
-        <input type="range" v-model="styleList.fontSize" :max="50" :min="12" />
-      </li>
-      <li class="item">
-        <span class="title">文字颜色</span>
-        <input type="color" v-model="styleList.color" />
-      </li>
-      <li class="item">
-        <span class="title">Hover 减淡深度</span>
-        <select v-model="styleList.lightSleep">
-          <option :value="0.1">0.1</option>
-          <option :value="0.2">0.2</option>
-          <option :value="0.3">0.3</option>
-          <option :value="0.4">0.4</option>
-          <option :value="0.5">0.5</option>
-        </select>
-      </li>
+    <!-- 参数配置项 -->
+    <div class="option">
+      <div class="item">
+        <div class="label">内容</div>
+        <div class="value-box">
+          <f-input type="text" v-model="styleList.text" />
+        </div>
+      </div>
 
-      <li class="item">
-        <span class="title">Active 加深深度</span>
-        <select v-model="styleList.darkSleep">
-          <option :value="0.1">0.1</option>
-          <option :value="0.2">0.2</option>
-          <option :value="0.3">0.3</option>
-          <option :value="0.4">0.4</option>
-          <option :value="0.5">0.5</option>
-        </select>
-      </li>
-      <li class="item"></li>
-    </ul>
+      <div class="item">
+        <div class="label">整体单位</div>
+        <div class="value-box">
+          <f-select v-model="styleList.unit" placeholder="请选择……">
+            <f-option value="px">px</f-option>
+            <f-option value="em">em</f-option>
+            <f-option value="rem">rem</f-option>
+            <f-option value="rpx">rpx</f-option>
+          </f-select>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="label">背景色</div>
+        <div class="value-box">
+          <input
+            type="color"
+            class="color-input"
+            v-model="styleList.background"
+          />
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="label">边框色</div>
+        <div class="value-box">
+          <input
+            type="color"
+            class="color-input"
+            v-model="styleList.borderColor"
+          />
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="label">宽度</div>
+        <div class="value-box">
+          <f-input-number
+            v-model="styleList.width"
+            :max="500"
+            :min="10"
+            model="switch"
+          />
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="label">高度</div>
+        <div class="value-box">
+          <f-input-number
+            v-model="styleList.height"
+            :max="200"
+            :min="10"
+            model="switch"
+          />
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="label">圆角</div>
+        <div class="value-box">
+          <f-input-number
+            v-model="styleList.borderRadius"
+            :max="100"
+            :min="0"
+            model="switch"
+          />
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="label">边框尺寸</div>
+        <div class="value-box">
+          <f-input-number
+            v-model="styleList.borderSize"
+            :max="30"
+            :min="0"
+            model="switch"
+          />
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="label">文字大小</div>
+        <div class="value-box">
+          <f-input-number
+            v-model="styleList.fontSize"
+            :max="50"
+            :min="1"
+            model="switch"
+          />
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="label">文字颜色</div>
+        <div class="value-box">
+          <input type="color" class="color-input" v-model="styleList.color" />
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="label">Hover 减淡深度</div>
+        <div class="value-box">
+          <f-select v-model="styleList.lightSleep" placeholder="请选择……">
+            <f-option :value="0.1">0.1</f-option>
+            <f-option :value="0.2">0.2</f-option>
+            <f-option :value="0.3">0.3</f-option>
+            <f-option :value="0.4">0.4</f-option>
+            <f-option :value="0.5">0.5</f-option>
+          </f-select>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="label">Active 加深深度</div>
+        <div class="value-box">
+          <f-select v-model="styleList.darkSleep" placeholder="请选择……">
+            <f-option :value="0.1">0.1</f-option>
+            <f-option :value="0.2">0.2</f-option>
+            <f-option :value="0.3">0.3</f-option>
+            <f-option :value="0.4">0.4</f-option>
+            <f-option :value="0.5">0.5</f-option>
+          </f-select>
+        </div>
+      </div>
+    </div>
 
     <div class="result">
       <f-button
@@ -200,10 +275,21 @@
   </div>
 </template>
 
-<style>
+<style lang="scss">
   * {
     margin: 0;
     padding: 0;
+  }
+
+  body {
+    &::-webkit-scrollbar {
+      width: 0;
+    }
+
+    &::-webkit-scrollbar-thumb,
+    &::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
   }
 </style>
 
@@ -214,6 +300,7 @@
     padding: 30px;
     box-sizing: border-box;
     position: relative;
+
     .f-link {
       position: absolute;
       top: 30px;
@@ -225,6 +312,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
+
       .button {
         height: 35px;
         color: #fff;
@@ -244,33 +332,50 @@
         overflow: hidden;
         white-space: nowrap;
         vertical-align: middle;
+
         &:hover {
           background: var(--button-hover-color) !important;
         }
+
         &:active {
           background: var(--button-active-color) !important;
         }
       }
     }
+
     .option {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      flex-wrap: wrap;
-      margin: 0 auto;
+      width: 100%;
+      display: grid;
+      grid-column-gap: 60px;
+      grid-row-gap: 16px;
+      grid-template-columns: repeat(2, 1fr);
 
       .item {
-        list-style: none;
-        width: 300px;
         color: #a8abb2;
         line-height: 50px;
         display: flex;
         align-items: center;
+        justify-content: space-between;
 
-        .title {
-          display: inline-block;
-          width: 190px;
+        .label {
+          display: flex;
           user-select: none;
+          align-items: center;
+          flex: 1;
+          flex-shrink: 0;
+        }
+
+        .value-box {
+          flex: 1;
+          flex-shrink: 0;
+          display: flex;
+          align-items: center;
+
+          .color-input {
+            width: 190px;
+            height: 35px;
+            border-radius: 5px;
+          }
         }
 
         input,
