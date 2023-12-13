@@ -12,7 +12,7 @@
 
 ## 🌏 线上地址
 
-https://tianyuhao.cn/button
+https://button.tianyuhao.cn
 
 ## 🙏 贡献者
 
